@@ -1,0 +1,134 @@
+@model EarthquakeSearchViewModel
+
+@{
+    ViewData["Title"] = "Explorar sismos";
+    var hasResults = Model.Result?.Country != null;
+}
+
+<main class="page-shell">
+    <section class="hero @(hasResults ? "hero--compact" : "")" aria-labelledby="page-title">
+        <div class="hero-grid" aria-hidden="true"></div>
+
+        <header class="site-header">
+            <a class="brand" href="/" aria-label="Sismo, ir al inicio">
+                <span class="brand-mark"><span></span></span>
+                <span>SISMO</span>
+            </a>
+            <div class="header-actions">
+                <span class="header-note"><span class="status-dot"></span> REGISTRO SÍSMICO · USGS</span>
+                <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false" aria-label="Activar modo oscuro">
+                    <span class="theme-toggle-icon" aria-hidden="true"></span>
+                    <span class="theme-toggle-label">Modo oscuro</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="hero-content">
+            <div class="hero-copy">
+                <p class="eyebrow"><span class="eyebrow-line"></span> CASO PRÁCTICO 01 <span class="eyebrow-divider">/</span> EXPLORACIÓN GLOBAL</p>
+                <h1 id="page-title">¿Dónde ha<br><em>temblado?</em></h1>
+                <p class="subtitle">Explora los sismos registrados desde 2020. Escribe un país para descubrir la actividad bajo sus pies.</p>
+
+                <form asp-action="Index" method="post" class="search-form" role="search">
+                    <label for="Country" class="search-label">BUSCAR POR PAÍS</label>
+                    <div class="search-box">
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                        <input asp-for="Country" maxlength="100" placeholder="Ej. Costa Rica" autocomplete="country-name" aria-describedby="search-hint" />
+                        <button type="submit">Explorar <span aria-hidden="true">↗</span></button>
+                    </div>
+                    <span asp-validation-for="Country" class="validation"></span>
+                    <p id="search-hint" class="search-hint"><span class="hint-line"></span> DATOS HISTÓRICOS <span>·</span> DESDE 2020</p>
+                </form>
+            </div>
+
+            <div class="seismic-visual" aria-hidden="true">
+                <div class="visual-orbit orbit-one"></div>
+                <div class="visual-orbit orbit-two"></div>
+                <div class="visual-orbit orbit-three"></div>
+                <div class="visual-axis visual-axis--horizontal"></div>
+                <div class="visual-axis visual-axis--vertical"></div>
+                <div class="epicenter"><span></span></div>
+                <span class="visual-coordinate coordinate-top">08° N / 84° W</span>
+                <span class="visual-coordinate coordinate-bottom">SEÑAL ACTIVA — 001</span>
+                <svg class="waveform" viewBox="0 0 500 140" preserveAspectRatio="none"><path d="M0 70 H85 L105 65 L118 76 L132 50 L146 96 L161 33 L177 108 L191 60 L208 73 L221 51 L235 85 L248 69 H500" fill="none" stroke="currentColor" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>
+                <div class="visual-caption"><span class="caption-square"></span> LA TIERRA EN MOVIMIENTO</div>
+            </div>
+        </div>
+
+        <div class="hero-footer"><span>01 / OBSERVATORIO</span><span class="footer-rule"></span><span>@(hasResults ? "DESLIZA PARA EXPLORAR ↓" : "BUSCA UN PAÍS PARA COMENZAR")</span></div>
+    </section>
+
+    @if (hasResults)
+    {
+        <section class="results-section" aria-labelledby="results-heading">
+            <div class="section-heading">
+                <div><p class="section-kicker">RESULTADOS / @Model.Result!.Country!.Name.ToUpperInvariant()</p><h2 id="results-heading">Actividad <em>sísmica.</em></h2></div>
+                <span class="result-count">@Model.Result.Total <span>REGISTROS</span></span>
+            </div>
+
+            <div class="results-layout">
+                <aside class="country-card">
+                    <p class="card-label">01 — PERFIL DEL PAÍS</p>
+                    @if (!string.IsNullOrWhiteSpace(Model.Result.Country.FlagUrl))
+                    {
+                        <img src="@Model.Result.Country.FlagUrl" alt="Bandera de @Model.Result.Country.Name" />
+                    }
+                    <h3>@Model.Result.Country.Name</h3>
+                    <p class="official-name">@Model.Result.Country.OfficialName</p>
+                    <dl>
+                        <div><dt>Capital</dt><dd>@Model.Result.Country.Capital</dd></div>
+                        <div><dt>Región</dt><dd>@Model.Result.Country.Region · @Model.Result.Country.Subregion</dd></div>
+                        <div><dt>Población</dt><dd>@Model.Result.Country.Population.ToString("N0")</dd></div>
+                        <div><dt>Idiomas</dt><dd>@string.Join(", ", Model.Result.Country.Languages)</dd></div>
+                    </dl>
+                </aside>
+
+                <div class="quakes">
+                    <div class="list-heading"><span>02 — EVENTOS REGISTRADOS</span><span>MAGNITUD / UBICACIÓN / FECHA</span></div>
+                    @foreach (var earthquake in Model.Result.Earthquakes)
+                    {
+                        <article class="quake-card">
+                            <div class="magnitude"><span>MAGNITUD</span><strong>@(earthquake.Magnitude?.ToString("0.0") ?? "N/D")</strong></div>
+                            <div class="quake-details">
+                                <h3>@earthquake.Place</h3>
+                                <p class="quake-date">@earthquake.EventTimeUtc.ToLocalTime().ToString("dd/MM/yyyy · h:mm tt")</p>
+                                <div class="quake-meta"><span>PROF. @earthquake.DepthKm.ToString("0.0") KM</span><span>@earthquake.Latitude.ToString("0.000"), @earthquake.Longitude.ToString("0.000")</span></div>
+                            </div>
+                            <a class="quake-link" href="@earthquake.DetailUrl" target="_blank" rel="noopener noreferrer" aria-label="Ver detalle de @earthquake.Place en USGS">↗</a>
+                        </article>
+                    }
+                    @if (Model.Result.Earthquakes.Count > 12)
+                    {
+                        <nav class="pagination" aria-label="Páginas de sismos" data-page-size="12" hidden>
+                            <p class="pagination-summary" aria-live="polite"></p>
+                            <div class="pagination-controls">
+                                <button class="page-arrow page-prev" type="button" aria-label="Página anterior">← Anterior</button>
+                                <div class="page-numbers"></div>
+                                <button class="page-arrow page-next" type="button" aria-label="Página siguiente">Siguiente →</button>
+                            </div>
+                        </nav>
+                    }
+                </div>
+            </div>
+        </section>
+    }
+</main>
+
+@if (!string.IsNullOrWhiteSpace(Model.AlertMessage))
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            Swal.fire({
+                icon: "@Model.AlertType",
+                title: "Atención",
+                text: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.AlertMessage)),
+                confirmButtonColor: "#c92f38"
+            });
+        });
+    </script>
+}
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}

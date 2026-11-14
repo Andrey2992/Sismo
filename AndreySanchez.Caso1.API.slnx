@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="AndreySanchez.Caso1.API/Caso1.API.csproj" />
+  <Project Path="Caso1.DataAccess/Caso1.DataAccess.csproj" />
+  <Project Path="Caso1.Models/Caso1.Models.csproj" />
+  <Project Path="Caso1.Web/Caso1.Web.csproj" />
+</Solution>

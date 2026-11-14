@@ -1,0 +1,8 @@
+.vs/
+**/bin/
+**/obj/
+*.user
+*.suo
+.env
+AndreySanchez.Caso1.API/appsettings.json
+AndreySanchez.Caso1.API/appsettings.Development.json
