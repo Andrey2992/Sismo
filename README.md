@@ -6,7 +6,7 @@
 ## Configuración
 
 1. Abre `AndreySanchez.Caso1.API.slnx` en Visual Studio.
-2. En `AndreySanchez.Caso1.API`, copia `appsettings.example.json` como `appsettings.json` si todavía no existe. En tu copia local, reemplaza `PEGA_AQUI_TU_API_KEY` por tu API key de REST Countries.
+2. En `AndreySanchez.Caso1.API`, copia `appsettings.example.json` como `appsettings.json`, ahi le pones la api key que te voy a pasar o si no el json
 3. Revisa `ConnectionStrings:DefaultConnection` en ese archivo. La configuración incluida usa `localhost\SQLEXPRESS` y autenticación de Windows; cámbiala si tu instancia de SQL Server tiene otro nombre.
 4. En Visual Studio, configura **varios proyectos de inicio**: `AndreySanchez.Caso1.API` y `Caso1.Web`, ambos con la acción **Iniciar** y el perfil **https**. Inicia la API antes de hacer una búsqueda en la web.
 5. Ejecuta la solución. La API crea la base `Caso1EarthquakesDb` si no existe. En el primer inicio importa los registros de USGS desde 2020 hasta la fecha final definida en `Usgs:EndDate`; esto puede tardar varios minutos. Espera a que la API indique que escucha en `https://localhost:7220`.
