@@ -2,13 +2,6 @@
 
 **Isaac Sanchez Delgado**
 
-Aplicación web en .NET 8 para consultar sismos de un país. La solución incluye una API, acceso a datos, modelos y una interfaz MVC. Los datos sísmicos provienen de USGS y la información del país de REST Countries.
-
-## Requisitos
-
-- Visual Studio con soporte para ASP.NET Core o el SDK de .NET 8.
-- SQL Server Express con la instancia `localhost\SQLEXPRESS`.
-- Una API key válida de REST Countries y conexión a Internet.
 
 ## Configuración
 
@@ -25,7 +18,7 @@ Aplicación web en .NET 8 para consultar sismos de un país. La solución incluy
 3. Consulta la información del país y los sismos. Usa los controles al final de la lista para cambiar de página (12 resultados por página).
 4. Usa **Modo oscuro / Modo claro** para cambiar el fondo de los resultados. La elección se guarda en ese navegador.
 
-La API se puede probar en `https://localhost:7220/swagger`. El endpoint de búsqueda es `GET /api/earthquakes/search?country=Costa%20Rica`. La API devuelve hasta 500 sismos por búsqueda; la paginación de la interfaz organiza esos resultados.
+La API se puede probar en `https://localhost:7220/swagger`. El endpoint de búsqueda es `GET /api/earthquakes/search?country=Costa%20Rica`. La API devuelve hasta 500 sismos por búsqueda, ahi le agregue la paginación para que no se vea tan chorreado.
 
 ## Si aparece un error
 
@@ -36,6 +29,5 @@ La API se puede probar en `https://localhost:7220/swagger`. El endpoint de búsq
 
 El script alternativo de creación de tablas está en `Database/Database.sql`.
 
-## GitHub y la API key
-
-El archivo `AndreySanchez.Caso1.API/appsettings.json` contiene tu configuración local y está excluido por `.gitignore`. Para compartir el proyecto, usa `appsettings.example.json` como plantilla. **No subas la API key real a GitHub**, incluso si el repositorio es privado.
+## La api key estara en el entregable
+con el appsettings.json
